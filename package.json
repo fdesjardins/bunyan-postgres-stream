@@ -1,0 +1,43 @@
+{
+  "name": "bunyan-postgres-stream",
+  "version": "0.0.0",
+  "description": "A bunyan stream for PostgreSQL",
+  "license": "MIT",
+  "repository": "fdesjardins/bunyan-postgres-stream",
+  "author": {
+    "name": "Forrest Desjardins",
+    "email": "desjardinsfg@gmail.com",
+    "url": "github.com/fdesjardins"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "test": "xo && nyc ava"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    ""
+  ],
+  "dependencies": {
+    "pg": "^6.0.3"
+  },
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "bunyan": "^1.8.1",
+    "coveralls": "^2.11.12",
+    "nyc": "^7.1.0",
+    "xo": "^0.16.0"
+  },
+  "xo": {
+    "esnext": true
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  }
+}
