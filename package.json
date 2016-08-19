@@ -19,7 +19,14 @@
     "index.js"
   ],
   "keywords": [
-    ""
+    "bunyan",
+    "postgres",
+    "postgresql",
+    "logging",
+    "stream",
+    "sink",
+    "logs",
+    "node"
   ],
   "dependencies": {
     "pg": "^6.0.3"
