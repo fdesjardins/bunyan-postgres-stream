@@ -29,7 +29,7 @@
     "node"
   ],
   "dependencies": {
-    "pg": "^6.0.3"
+    "pg": "^6.1.0"
   },
   "devDependencies": {
     "ava": "^0.16.0",
