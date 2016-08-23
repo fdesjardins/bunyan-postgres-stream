@@ -7,51 +7,71 @@ class LogStream extends Writable {
 	constructor(options) {
 		super(options);
 
-		this.connection = options.connection;
-		this.tableName = options.tableName;
-
-		if (!this.connection || !this.tableName) {
+		if (options.connection === undefined || options.tableName === undefined) {
 			throw new Error('Invalid bunyan-postgres stream configuration');
 		}
 
-		this.pool = new pg.Pool(this.connection);
+		if (typeof options.connection.__knex__ === 'string') {
+			this.knex = options.connection;
+			this._write = this._writeKnex;
+		}
+
+		if (typeof options.connection === 'object') {
+			this.connection = options.connection;
+			this._write = this._writePgPool;
+			this.pool = new pg.Pool(this.connection);
+		}
+
+		this.tableName = options.tableName;
 	}
 
-	_write(chunk, env, cb) {
+	_writeKnex(chunk, env, cb) {
 		const content = JSON.parse(chunk.toString());
+		this.knex
+			.insert({
+				name: content.name,
+				level: content.level,
+				hostname: content.hostname,
+				msg: content.msg,
+				pid: content.pid,
+				time: content.time,
+				content: JSON.stringify(content)
+			})
+			.into(this.tableName)
+			.asCallback(cb);
+	}
 
-		this.pool.connect((err, client, done) => {
-			if (err) {
-				throw err;
-			}
+	writePgPool(client, content) {
+		return client.query(`
+			insert into ${this.tableName}
+				(name, level, hostname, msg, pid, time, content)
+			values (
+				'${content.name}',
+				'${content.level}',
+				'${content.hostname}',
+				'${content.msg}',
+				'${content.pid}',
+				'${content.time}',
+				'${JSON.stringify(content)}'
+			)`);
+	}
 
-			client.query(`
-				insert into ${this.tableName}
-					(name, level, hostname, msg, pid, time, content)
-				values (
-					'${content.name}',
-					'${content.level}',
-					'${content.hostname}',
-					'${content.msg}',
-					'${content.pid}',
-					'${content.time}',
-					'${JSON.stringify(content)}'
-				)`,
-				(err, result) => {
-					if (err) {
-						throw err;
-					}
-
-					// release the client back to the pool
-					done();
-
-					cb(result);
-				});
-		});
+	_writePgPool(chunk, env, cb) {
+		const content = JSON.parse(chunk.toString());
+		this.pool.connect().then(client => {
+			return this.writePgPool(client, content).then(result => {
+				cb(null, result.rows);
+				client.release();
+			});
+		})
+		.catch(err => cb(err));
 	}
 
 	end(cb) {
-		this.pool.end(cb);
+		if (this.pool) {
+			return this.pool.end(cb);
+		}
+		cb();
 	}
 }
 
