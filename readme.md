@@ -4,6 +4,8 @@
 
 This module provides a bunyan stream to record logs to PostgreSQL. It maps the default log fields to table columns and also records the entire log message in a `jsonb` column to support custom fields.
 
+Requires PostgreSQL 9.4 or above for use with JSONB column types.
+
 ## Install
 
 ```
@@ -58,7 +60,6 @@ log.info('something happened');
 stream.end();
 ```
 
-
 ## API
 
 ### bunyanPostgresStream(options)
@@ -69,7 +70,9 @@ stream.end();
 
 Type: `object`
 
-A valid node-postgres connection options object.
+One of the following:
+- a valid node-postgres connection options object
+- an initialized knex.js instance (see [examples/knex.js](./examples/knex.js))
 
 ##### tableName
 

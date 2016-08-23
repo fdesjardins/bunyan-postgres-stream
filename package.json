@@ -26,7 +26,10 @@
     "stream",
     "sink",
     "logs",
-    "node"
+    "node",
+    "knex",
+    "pgpool",
+    "pool"
   ],
   "dependencies": {
     "pg": "^6.1.0"
