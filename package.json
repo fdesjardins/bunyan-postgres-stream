@@ -1,6 +1,6 @@
 {
   "name": "bunyan-postgres-stream",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A bunyan stream for PostgreSQL",
   "license": "MIT",
   "repository": "fdesjardins/bunyan-postgres-stream",
