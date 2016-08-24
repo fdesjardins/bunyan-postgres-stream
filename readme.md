@@ -1,8 +1,12 @@
-# bunyan-postgres-stream [![Build Status](https://travis-ci.org/fdesjardins/bunyan-postgres-stream.svg?branch=master)](https://travis-ci.org/fdesjardins/bunyan-postgres-stream) [![Coverage Status](https://coveralls.io/repos/github/fdesjardins/bunyan-postgres-stream/badge.svg?branch=master)](https://coveralls.io/github/fdesjardins/bunyan-postgres-stream?branch=master)
+# bunyan-postgres-stream
 
-> A bunyan stream for PostgreSQL
+[![Build Status](https://travis-ci.org/fdesjardins/bunyan-postgres-stream.svg?branch=master)](https://travis-ci.org/fdesjardins/bunyan-postgres-stream)
+[![NPM Version](http://img.shields.io/npm/v/bunyan-postgres-stream.svg?style=flat)](https://www.npmjs.org/package/bunyan-postgres-stream)
+[![Coverage Status](https://coveralls.io/repos/github/fdesjardins/bunyan-postgres-stream/badge.svg?branch=master)](https://coveralls.io/github/fdesjardins/bunyan-postgres-stream?branch=master)
 
-This module provides a bunyan stream to record logs to PostgreSQL. It maps the default log fields to table columns and also records the entire log message in a `jsonb` column to support custom fields.
+Store your bunyan logs in PostgreSQL.
+
+This module creates a bunyan stream that maps the default log fields to table columns and also records the entire log message in a `jsonb` column to support your custom fields.
 
 Requires PostgreSQL 9.4 or above for use with JSONB column types.
 
@@ -14,7 +18,7 @@ $ npm install --save bunyan-postgres-stream
 
 ## Setup
 
-This module requires a table to be created in your PostgreSQL database:
+This module requires a table to be created in your PostgreSQL database with the following fields:
 
 ```sql
 CREATE TABLE logs (name, level, hostname, msg, pid, time, content)
@@ -33,7 +37,7 @@ CREATE TABLE logs (name, level, hostname, msg, pid, time, content)
 
 You may also want to put indexes on some of the columns depending on how you are using the logs.
 
-## Usage
+## Examples
 
 ```js
 const bunyan = require('bunyan');
