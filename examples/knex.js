@@ -1,13 +1,19 @@
 const bunyan = require('bunyan');
 const bunyanPostgresStream = require('./');
+const knex = require('knex')
 
-const stream = bunyanPostgresStream({
+const db = knex({
+	client: 'pg',
 	connection: {
 		host: 'localhost',
 		user: 'postgres',
 		password: 'password',
 		database: 'db'
-	},
+	}
+})
+
+const stream = bunyanPostgresStream({
+	connection: db,
 	tableName: 'logs'
 });
 
@@ -18,5 +24,3 @@ const log = bunyan.createLogger({
 });
 
 log.info('something happened');
-
-stream.end();
