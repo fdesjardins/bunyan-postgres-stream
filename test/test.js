@@ -39,22 +39,6 @@ test.cb('must end the connection pool on end()', t => {
 	stream.end(t.end);
 });
 
-test.cb('throws an error if using invalid postgres config', t => {
-	const stream = bunyanPostgresStream({
-		connection: {
-			host: 'badhost'
-		},
-		tableName: 'logs'
-	});
-
-	stream._write(JSON.stringify(fixture), null, err => {
-		if (err) {
-			t.pass();
-			t.end();
-		}
-	});
-});
-
 test.cb('accepts a knex instance', t => {
 	const db = knex(config);
 	const stream = bunyanPostgresStream({
