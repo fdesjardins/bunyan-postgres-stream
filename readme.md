@@ -16,10 +16,9 @@ Requires PostgreSQL 9.4 or above for use with JSONB column types.
 $ npm install --save bunyan-postgres-stream
 ```
 
-## Setup
+## Usage
 
-This module requires a table to be created in your PostgreSQL database with the following fields:
-
+First, create the table you want to store your logs in:
 ```sql
 create table if not exists "public"."logs" (
   "id" serial primary key,
@@ -33,9 +32,7 @@ create table if not exists "public"."logs" (
 )
 ```
 
-You may also want to put indexes on some of the columns depending on how you are using the logs.
-
-## Examples
+Then, use the package as a Bunyan stream:
 
 ```js
 const bunyan = require('bunyan');
