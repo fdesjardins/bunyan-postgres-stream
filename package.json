@@ -13,7 +13,7 @@
     "node": ">=6"
   },
   "scripts": {
-    "test": "xo && nyc ava test/test.js"
+    "test": "eslint *.js && nyc ava test/test.js"
   },
   "files": [
     "index.js"
@@ -38,15 +38,12 @@
     "ava": "^0.18.2",
     "bunyan": "^1.8.9",
     "coveralls": "^2.12.0",
-    "knex": "^0.12.8",
-    "nyc": "^10.1.2",
-    "xo": "^0.18.0"
-  },
-  "xo": {
-    "esnext": true,
-    "ignores": [
-      "examples/*.js"
-    ]
+    "eslint": "^3.18.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1",
+    "knex": "^0.12.9",
+    "nyc": "^10.1.2"
   },
   "nyc": {
     "reporter": [
