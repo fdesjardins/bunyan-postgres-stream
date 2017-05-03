@@ -35,15 +35,15 @@
     "pg": "^6.1.5"
   },
   "devDependencies": {
-    "ava": "^0.18.2",
-    "bunyan": "^1.8.9",
-    "coveralls": "^2.12.0",
-    "eslint": "^3.18.0",
-    "eslint-config-standard": "^7.1.0",
+    "ava": "^0.19.1",
+    "bunyan": "^1.8.10",
+    "coveralls": "^2.13.1",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^2.1.1",
-    "knex": "^0.12.9",
-    "nyc": "^10.1.2"
+    "eslint-plugin-standard": "^3.0.1",
+    "knex": "^0.13.0",
+    "nyc": "^10.3.0"
   },
   "nyc": {
     "reporter": [
