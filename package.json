@@ -32,7 +32,7 @@
     "pool"
   ],
   "dependencies": {
-    "pg": "^6.2.2"
+    "pg": "^6.2.3"
   },
   "devDependencies": {
     "ava": "^0.19.1",
