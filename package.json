@@ -35,17 +35,17 @@
     "pg": "^6.4.0"
   },
   "devDependencies": {
-    "ava": "^0.19.1",
+    "ava": "^0.20.0",
     "bunyan": "^1.8.10",
     "coveralls": "^2.13.1",
-    "eslint": "^4.0.0",
+    "eslint": "^4.1.1",
     "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.3.0",
-    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "knex": "^0.13.0",
-    "nyc": "^11.0.2"
+    "nyc": "^11.0.3"
   },
   "nyc": {
     "reporter": [
