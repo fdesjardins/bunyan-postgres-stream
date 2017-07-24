@@ -18,6 +18,11 @@ class LogStream extends Writable {
       this.connection = options.connection
       this._write = this._writePgPool
       this.pool = new pg.Pool(this.connection)
+      this.on('finish', () => {
+        if (this.pool) {
+          return this.pool.end()
+        }
+      })
     }
 
     this.tableName = options.tableName
@@ -65,12 +70,9 @@ class LogStream extends Writable {
       .catch(err => cb(err))
   }
 
-  end (cb) {
-    if (this.pool) {
-      return this.pool.end(cb)
-    }
-    cb()
-  }
+  // end (cb) {
+  //   this.end(cb)
+  // }
 }
 
 module.exports = (options = {}) => {
