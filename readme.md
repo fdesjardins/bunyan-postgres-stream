@@ -8,7 +8,7 @@ Store your Bunyan logs in PostgreSQL.
 
 This module creates a Bunyan stream that maps the default log fields to table columns and also records the entire log message in a `jsonb` column to support your custom fields.
 
-Requires PostgreSQL 9.4 or above for use with JSONB column types.
+Requires PostgreSQL 9.4 or above for use with `jsonb` column types.
 
 ## Install
 
@@ -35,28 +35,29 @@ create table if not exists "public"."logs" (
 Then, use the package as a Bunyan stream:
 
 ```js
-const bunyan = require('bunyan');
-const bunyanPostgresStream = require('./');
+const bunyan = require('bunyan')
+const bunyanPostgresStream = require('./')
 
 const stream = bunyanPostgresStream({
-	connection: {
-		host: 'localhost',
-		user: 'postgres',
-		password: 'password',
-		database: 'db'
-	},
-	tableName: 'logs'
-});
+  connection: {
+    host: 'localhost',
+    user: 'postgres',
+    password: 'password',
+    database: 'db'
+  },
+  tableName: 'logs'
+})
 
 const log = bunyan.createLogger({
-	name: 'postgres stream',
-	level: 'info',
-	stream
-});
+  name: 'postgres stream',
+  level: 'info',
+  stream
+})
 
-log.info('something happened');
+log.info('something happened')
 
-stream.end();
+// explicity dispose of the database connection pool
+stream.end()
 ```
 
 ## API
