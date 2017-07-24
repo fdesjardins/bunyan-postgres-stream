@@ -34,8 +34,8 @@ class LogStream extends Writable {
       time: content.time,
       content: JSON.stringify(content)
     })
-    .into(this.tableName)
-    .asCallback(cb)
+      .into(this.tableName)
+      .asCallback(cb)
   }
 
   writePgPool (client, content) {
@@ -62,7 +62,7 @@ class LogStream extends Writable {
         client.release()
       })
     })
-    .catch(err => cb(err))
+      .catch(err => cb(err))
   }
 
   end (cb) {
