@@ -3,6 +3,7 @@ module.exports = {
   connection: {
     adapter: 'postgresql',
     database: 'travis_ci_test',
-    user: 'postgres'
+    user: 'postgres',
+    password: 'password'
   }
 }
