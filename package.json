@@ -32,15 +32,15 @@
     "pool"
   ],
   "dependencies": {
-    "pg": "^7.3.0",
-    "standard": "^10.0.3"
+    "pg": "^7.4.1",
+    "standard": "^11.0.1"
   },
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.25.0",
     "bunyan": "^1.8.12",
-    "coveralls": "^3.0.0",
-    "knex": "^0.13.0",
-    "nyc": "^11.2.1"
+    "coveralls": "^3.0.1",
+    "knex": "^0.14.6",
+    "nyc": "^11.7.1"
   },
   "nyc": {
     "reporter": [
