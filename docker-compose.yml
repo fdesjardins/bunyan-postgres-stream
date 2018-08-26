@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+  db:
+    image: postgres:9.4
+    environment:
+      - POSTGRES_DB=test
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+
+  test:
+    image: node:9
+    depends_on:
+      - db
+    working_dir: /app
+    volumes:
+      - ./test:/app/test
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+      - ./index.js:/app/index.js
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=test
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres

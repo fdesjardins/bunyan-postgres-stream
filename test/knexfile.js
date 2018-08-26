@@ -1,5 +1,1 @@
-const config = require('./config')
-
-module.exports = {
-  test: config
-}
+module.exports = require('./config')

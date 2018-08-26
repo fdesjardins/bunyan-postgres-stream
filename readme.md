@@ -19,6 +19,7 @@ $ npm install --save bunyan-postgres-stream
 ## Usage
 
 First, create the table you want to store your logs in:
+
 ```sql
 create table if not exists "public"."logs" (
   "id" serial primary key,
@@ -71,6 +72,7 @@ stream.end()
 Type: `object`
 
 One of the following:
+
 - a valid node-postgres connection options object
 - an initialized knex.js instance (see [examples/knex.js](./examples/knex.js))
 

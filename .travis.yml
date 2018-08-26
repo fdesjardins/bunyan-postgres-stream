@@ -7,7 +7,9 @@ addons:
   postgresql: "9.4"
 cache: yarn
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database test;' -U postgres
   - NODE_ENV=test ./node_modules/.bin/knex migrate:latest --knexfile ./test/knexfile.js
+script:
+  - npm run test:ci
 after_script:
   - 'cat coverage/lcov.info | ./node_modules/.bin/coveralls'

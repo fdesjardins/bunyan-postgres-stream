@@ -13,7 +13,9 @@
     "node": ">=7"
   },
   "scripts": {
-    "test": "./node_modules/.bin/standard && nyc ava test/test.js"
+    "test:ci": "npx nyc ava test/test.js",
+    "migrate": "knex --cwd test --knexfile test/knexfile.js migrate:latest",
+    "test": "docker-compose up -d db && docker-compose run test bash -c 'npm install && npm run migrate && npm run test:ci' && docker-compose down"
   },
   "files": [
     "index.js"
