@@ -30,52 +30,50 @@ class LogStream extends Writable {
 
   _writeKnex (chunk, env, cb) {
     const content = JSON.parse(chunk.toString())
-    this.knex.insert({
-      name: content.name,
-      level: content.level,
-      hostname: content.hostname,
-      msg: content.msg,
-      pid: content.pid,
-      time: content.time,
-      content: JSON.stringify(content)
-    })
+    this.knex
+      .insert({
+        name: content.name,
+        level: content.level,
+        hostname: content.hostname,
+        msg: content.msg,
+        pid: content.pid,
+        time: content.time,
+        content: JSON.stringify(content)
+      })
       .into(this.tableName)
       .asCallback(cb)
   }
 
   writePgPool (client, content) {
-    return client.query(`
-      insert into ${this.tableName}
-        (name, level, hostname, msg, pid, time, content)
-      values (
-        '${content.name}',
-        '${content.level}',
-        '${content.hostname}',
-        '${content.msg}',
-        '${content.pid}',
-        '${content.time}',
-        '${LogStream.escapeString(JSON.stringify(content))}'
-      );
-    `)
+    return client.query({
+      text: `insert into ${
+        this.tableName
+      } (name, level, hostname, msg, pid, time, content) values ($1, $2, $3, $4, $5, $6, $7);`,
+      values: [
+        content.name,
+        content.level,
+        content.hostname,
+        content.msg,
+        content.pid,
+        content.time,
+        JSON.stringify(content)
+          .split("'")
+          .join("''")
+      ]
+    })
   }
 
   _writePgPool (chunk, env, cb) {
     const content = JSON.parse(chunk.toString())
-    this.pool.connect().then(client => {
-      return this.writePgPool(client, content).then(result => {
-        cb(null, result.rows)
-        client.release()
+    this.pool
+      .connect()
+      .then(client => {
+        return this.writePgPool(client, content).then(result => {
+          cb(null, result.rows)
+          client.release()
+        })
       })
-    })
       .catch(err => cb(err))
-  }
-
-  // end (cb) {
-  //   this.end(cb)
-  // }
-
-  static escapeString (str) {
-    return str.split('\'').join('\'\'')
   }
 }
 

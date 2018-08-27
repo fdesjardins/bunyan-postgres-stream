@@ -13,7 +13,7 @@
     "node": ">=7"
   },
   "scripts": {
-    "test:ci": "npx nyc ava test/test.js",
+    "test:ci": "npx nyc mocha test/test.js",
     "migrate": "knex --cwd test --knexfile test/knexfile.js migrate:latest",
     "test": "docker-compose up -d db && docker-compose run test bash -c 'npm install && npm run migrate && npm run test:ci' && docker-compose down"
   },
@@ -38,10 +38,10 @@
     "standard": "^11.0.1"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
     "bunyan": "^1.8.12",
     "coveralls": "^3.0.1",
     "knex": "^0.14.6",
+    "mocha": "^5.2.0",
     "nyc": "^12.0.2"
   },
   "nyc": {

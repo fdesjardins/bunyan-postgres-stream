@@ -1,8 +1,8 @@
-import test from 'ava'
-import knex from 'knex'
-import bunyan from 'bunyan'
-import bunyanPostgresStream from '../'
-import config from './config'
+const { describe, it } = require('mocha')
+const knex = require('knex')
+const bunyan = require('bunyan')
+const bunyanPostgresStream = require('../')
+const config = require('./config')
 
 const fixture = {
   name: 'name',
@@ -14,152 +14,169 @@ const fixture = {
 }
 fixture.content = JSON.stringify(fixture)
 
-test('must provide pg connection configuration', t => {
-  t.throws(() => {
-    bunyanPostgresStream({
-      tableName: 'test'
+describe('bunyan-postgres-stream', () => {
+  it('should provide pg connection configuration', done => {
+    try {
+      bunyanPostgresStream({
+        tableName: 'test'
+      })
+    } catch (err) {
+      return done()
+    }
+    done(new Error('should have thrown an error'))
+  })
+
+  it('should provide a tableName', done => {
+    try {
+      bunyanPostgresStream({
+        conntection: {}
+      })
+    } catch (err) {
+      return done()
+    }
+    done(new Error('should have thrown an error'))
+  })
+
+  it('should end the connection pool on end()', done => {
+    const stream = bunyanPostgresStream({
+      connection: {},
+      tableName: 'logs'
     })
+    stream.end(() => done())
   })
-})
 
-test('must provide tableName', t => {
-  t.throws(() => {
-    bunyanPostgresStream({
-      connection: {}
+  it('should accept a knex instance', done => {
+    const db = knex(config)
+    const stream = bunyanPostgresStream({
+      connection: db,
+      tableName: 'logs'
     })
-  })
-})
-
-test.cb('must end the connection pool on end()', t => {
-  const stream = bunyanPostgresStream({
-    connection: {},
-    tableName: 'logs'
+    stream.end(() => done())
   })
 
-  stream.end(t.end)
-})
+  it('should write to the database correctly using pgPool', done => {
+    const stream = bunyanPostgresStream({
+      connection: config.connection,
+      tableName: 'logs'
+    })
 
-test.cb('accepts a knex instance', t => {
-  const db = knex(config)
-  const stream = bunyanPostgresStream({
-    connection: db,
-    tableName: 'logs'
-  })
+    const log = bunyan.createLogger({
+      name: 'test logger',
+      stream
+    })
 
-  stream.end(t.end)
-})
+    const db = knex(config)
+    const uniqueMessage = `unique message: ${Math.random()}`
+    log.info(uniqueMessage)
 
-test.cb('writes to the database using pgPool', t => {
-  const stream = bunyanPostgresStream({
-    connection: config.connection,
-    tableName: 'logs'
-  })
-
-  const log = bunyan.createLogger({
-    name: 'test logger',
-    stream
-  })
-
-  const db = knex(config)
-  const uniqueMessage = `unique message: ${Math.random()}`
-  log.info(uniqueMessage)
-
-  t.plan(1)
-  setTimeout(() => {
     stream.end(() => {
       db('logs')
         .first('*')
         .where('msg', '=', uniqueMessage)
         .then(result => {
           if (result) {
-            t.pass()
+            done()
+          } else {
+            done(new Error('error writing with pgPool'))
           }
-          t.end()
         })
+        .catch(err => done(err))
+        .finally(() => db.destroy())
     })
-  }, 1000)
-})
-
-test.cb('calls the writePgPool callback', t => {
-  const stream = bunyanPostgresStream({
-    connection: config.connection,
-    tableName: 'logs'
   })
 
-  stream._write(JSON.stringify(fixture), null, t.end)
-})
+  it('should call the writePgPool callback', done => {
+    const stream = bunyanPostgresStream({
+      connection: config.connection,
+      tableName: 'logs'
+    })
 
-test.cb('calls the writeKnex callback', t => {
-  const db = knex(config)
-  const stream = bunyanPostgresStream({
-    connection: db,
-    tableName: 'logs'
+    stream._write(JSON.stringify(fixture), null, done)
+    stream.end()
   })
 
-  stream._write(JSON.stringify(fixture), null, t.end)
-})
+  it('should call the writeKnex callback', done => {
+    const db = knex(config)
+    const stream = bunyanPostgresStream({
+      connection: db,
+      tableName: 'logs'
+    })
 
-test.cb('writes to the database using a knex instance', t => {
-  const db = knex(config)
-  const stream = bunyanPostgresStream({
-    connection: db,
-    tableName: 'logs'
+    stream._write(JSON.stringify(fixture), null, () => {
+      db.destroy()
+      done()
+    })
   })
 
-  const log = bunyan.createLogger({
-    name: 'test logger',
-    stream
-  })
+  it('should write to the database using knex', done => {
+    const db = knex(config)
+    const stream = bunyanPostgresStream({
+      connection: db,
+      tableName: 'logs'
+    })
 
-  const uniqueMessage = `unique message: ${Math.random()}`
-  log.info(uniqueMessage)
+    const log = bunyan.createLogger({
+      name: 'test logger',
+      stream
+    })
 
-  setTimeout(() => {
+    const uniqueMessage = `unique message: ${Math.random()}`
+    log.info(uniqueMessage)
+
     stream.end(() => {
       db('logs')
         .first('*')
         .where('msg', '=', uniqueMessage)
         .then(result => {
           if (result) {
-            t.pass()
+            done()
+          } else {
+            done(new Error('error writing with pgPool'))
           }
-          t.end()
         })
+        .catch(err => done(err))
+        .finally(() => db.destroy())
     })
-  }, 1000)
-})
-
-test.cb('writes every log message before draining database connection pool', t => {
-  const stream = bunyanPostgresStream({
-    connection: config.connection,
-    tableName: 'logs'
   })
 
-  const log = bunyan.createLogger({
-    name: 'test logger',
-    stream
-  })
+  it('should write every log message before draining the connection pool', done => {
+    const stream = bunyanPostgresStream({
+      connection: config.connection,
+      tableName: 'logs'
+    })
 
-  const db = knex(config)
-  const tag = 'before draining pool'
+    const log = bunyan.createLogger({
+      name: 'test logger',
+      stream
+    })
 
-  db.raw(`delete from logs where msg like :tag`, { tag: `${tag}%` })
-    .then(result => {
-      for (let i = 0; i < 5000; i += 1) {
-        log.info(`${tag}: ${i}`)
-      }
+    const db = knex(config)
+    const tag = 'before draining pool'
 
-      setTimeout(() => {
-        stream.end(() => {
-          db.raw(`select count(*) from logs where msg like :tag`, { tag: `${tag}%` })
-            .then(result => {
-              if (result.count === 5000) {
-                t.pass()
-              }
-              t.end()
+    db.raw(`delete from logs where msg like :tag`, { tag: `${tag}%` })
+      .then(result => {
+        for (let i = 0; i < 500; i += 1) {
+          log.info(`${tag}: ${i}`)
+        }
+
+        return new Promise((resolve, reject) => {
+          stream.end(() => {
+            db.raw(`select count(*) from logs where msg like :tag`, {
+              tag: `${tag}%`
             })
+              .then(result => resolve(result.rows[0]))
+              .catch(err => reject(err))
+          })
         })
-      }, 1000)
-    })
-    .catch(err => console.error(err))
+      })
+      .then(result => {
+        if (result.count === '500') {
+          done()
+        } else {
+          done(new Error("didn't write every message"))
+        }
+      })
+      .catch(err => done(err))
+      .finally(() => db.destroy())
+  })
 })

@@ -3,10 +3,12 @@ services:
 
   db:
     image: postgres:9.4
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_DB=test
-      - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
 
   test:
     image: node:9
@@ -21,5 +23,5 @@ services:
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=test
-      - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
