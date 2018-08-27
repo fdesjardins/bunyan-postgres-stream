@@ -54,7 +54,7 @@ class LogStream extends Writable {
         '${content.msg}',
         '${content.pid}',
         '${content.time}',
-        '${JSON.stringify(content)}'
+        '${LogStream.escapeString(JSON.stringify(content))}'
       );
     `)
   }
@@ -73,6 +73,10 @@ class LogStream extends Writable {
   // end (cb) {
   //   this.end(cb)
   // }
+
+  static escapeString (str) {
+    return str.split('\'').join('\'\'')
+  }
 }
 
 module.exports = (options = {}) => {
