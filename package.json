@@ -1,53 +1,53 @@
 {
   "name": "bunyan-postgres-stream",
-  "version": "1.5.2",
   "description": "A bunyan stream for PostgreSQL",
-  "license": "MIT",
-  "repository": "fdesjardins/bunyan-postgres-stream",
+  "version": "1.5.2",
   "author": {
     "name": "Forrest Desjardins",
     "email": "desjardinsfg@gmail.com",
     "url": "github.com/fdesjardins"
   },
+  "dependencies": {
+    "pg": "^7.10.0"
+  },
+  "devDependencies": {
+    "bunyan": "^1.8.12",
+    "coveralls": "^3.0.3",
+    "knex": "^0.16.5",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.0",
+    "standard": "^12.0.1"
+  },
   "engines": {
     "node": ">=7"
-  },
-  "scripts": {
-    "test:ci": "npx nyc mocha test/test.js",
-    "migrate": "knex --cwd test --knexfile knexfile.js migrate:latest",
-    "test": "docker-compose up -d db && docker-compose run test bash -c 'npm install && npm run migrate && npm run test:ci' && docker-compose down"
   },
   "files": [
     "index.js"
   ],
   "keywords": [
     "bunyan",
-    "postgres",
-    "postgresql",
+    "knex",
     "logging",
-    "stream",
-    "sink",
     "logs",
     "node",
-    "knex",
     "pgpool",
-    "pool"
+    "pool",
+    "postgres",
+    "postgresql",
+    "sink",
+    "stream"
   ],
-  "dependencies": {
-    "pg": "^7.8.1",
-    "standard": "^12.0.1"
-  },
-  "devDependencies": {
-    "bunyan": "^1.8.12",
-    "coveralls": "^3.0.3",
-    "knex": "^0.16.3",
-    "mocha": "^6.0.1",
-    "nyc": "^13.3.0"
-  },
+  "license": "MIT",
   "nyc": {
     "reporter": [
       "lcov",
       "text"
     ]
+  },
+  "repository": "fdesjardins/bunyan-postgres-stream",
+  "scripts": {
+    "migrate": "knex --cwd test --knexfile knexfile.js migrate:latest",
+    "test": "docker-compose up -d db && docker-compose run test bash -c 'npm install && npm run migrate && npm run test:ci' && docker-compose down",
+    "test:ci": "npx nyc mocha test/test.js"
   }
 }
