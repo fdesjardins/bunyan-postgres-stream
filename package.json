@@ -48,6 +48,6 @@
   "scripts": {
     "migrate": "knex --cwd test --knexfile knexfile.js migrate:latest",
     "test": "docker-compose up -d db && docker-compose run test bash -c 'npm install && npm run migrate && npm run test:ci' && docker-compose down",
-    "test:ci": "npx nyc mocha test/test.js"
+    "test:ci": "npx nyc mocha --opts mocha.opts test/test.js"
   }
 }

@@ -14,6 +14,7 @@ services:
     working_dir: /app
     volumes:
       - ./test:/app/test
+      - ./mocha.opts:/app/mocha.opts
       - ./package.json:/app/package.json
       - ./index.js:/app/index.js
     environment:
