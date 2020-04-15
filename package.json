@@ -1,7 +1,7 @@
 {
   "name": "bunyan-postgres-stream",
   "description": "A bunyan stream for PostgreSQL",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "author": {
     "name": "Forrest Desjardins",
     "email": "desjardinsfg@gmail.com",
